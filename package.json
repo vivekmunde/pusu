@@ -1,0 +1,43 @@
+{
+  "name": "pusu",
+  "version": "1.0.0",
+  "description": "Simple Publish-Subscribe implementation APIs for Javascript Apps",
+  "main": "webpack.config.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "clean": "rimraf ./dist",
+    "test": "jest",
+    "prepublish": "npm run clean && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vivekmunde/pusu.git"
+  },
+  "files": [
+    "dist",
+    "src",
+    "index.js"
+  ],
+  "keywords": [
+    "javascript",
+    "publish",
+    "subscribe",
+    "pub-sub"
+  ],
+  "author": "Vivek Munde",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vivekmunde/pusu/issues"
+  },
+  "homepage": "https://github.com/vivekmunde/pusu#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-jest": "^24.8.0",
+    "babel-loader": "^8.0.6",
+    "jest": "^24.8.0",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.7"
+  }
+}
