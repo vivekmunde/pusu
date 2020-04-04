@@ -2,7 +2,7 @@
   "name": "pusu",
   "version": "1.0.0",
   "description": "Simple Publish-Subscribe implementation APIs for Javascript Apps",
-  "main": "webpack.config.js",
+  "main": "./dist/index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "clean": "rimraf ./dist",
