@@ -1,8 +1,6 @@
 # pusu
 Simple `pub-sub` implementation APIs for Javascript Apps
 
-**Size**: Minified: 3.8kB | Minified+Gzipped: 1.1kB
-
 ## createPublication([name])
 **Parameters**:
 - `name`: *(Optional)* String - Publication name
