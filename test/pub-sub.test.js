@@ -1,111 +1,109 @@
-import createPublication from '../src/create-publication';
-import publish from '../src/publish';
-import subscribe from '../src/subscribe';
+import { createPublication, publish, subscribe } from '../src';
 
 describe('pub-sub', () => {
-    test('Should not error when publishing a publication without any subscribers', () => {
-        expect.hasAssertions();
+  test('Should not error when publishing a publication without any subscribers', () => {
+    expect.hasAssertions();
 
-        const publication = createPublication('test');
+    const publication = createPublication('test');
 
-        publish(publication);
+    publish(publication);
 
-        expect(true).toBe(true);
-    });
+    expect(true).toBe(true);
+  });
 
-    test('Should publish & call the subscribers with args', () => {
-        expect.hasAssertions();
+  test('Should publish & call the subscribers with args', () => {
+    expect.hasAssertions();
 
-        const testData1 = 'test-data1';
-        const testData2 = { data: 'test-data2' };
-        const testData3 = ['test-data3'];
+    const testData1 = 'test-data1';
+    const testData2 = { data: 'test-data2' };
+    const testData3 = ['test-data3'];
 
-        const publication = createPublication('test');
+    const publication = createPublication('test');
 
-        const subscriber1 = jest.fn(val => val);
-        const subscriber2 = jest.fn(val => val);
+    const subscriber1 = jest.fn(val => val);
+    const subscriber2 = jest.fn(val => val);
 
-        const unsubscribe1 = subscribe(publication, subscriber1);
-        const unsubscribe2 = subscribe(publication, subscriber2);
+    const unsubscribe1 = subscribe(publication, subscriber1);
+    const unsubscribe2 = subscribe(publication, subscriber2);
 
-        publish(publication, testData1, testData2, testData3)
+    publish(publication, testData1, testData2, testData3)
 
-        expect(subscriber1).toHaveBeenCalledWith(testData1, testData2, testData3);
-        expect(subscriber2).toHaveBeenCalledWith(testData1, testData2, testData3);
+    expect(subscriber1).toHaveBeenCalledWith(testData1, testData2, testData3);
+    expect(subscriber2).toHaveBeenCalledWith(testData1, testData2, testData3);
 
-        unsubscribe1();
-        unsubscribe2();
-    });
+    unsubscribe1();
+    unsubscribe2();
+  });
 
-    test('Should not call the subscriber after unsubscribing', () => {
-        expect.hasAssertions();
+  test('Should not call the subscriber after unsubscribing', () => {
+    expect.hasAssertions();
 
-        const publication = createPublication('test');
+    const publication = createPublication('test');
 
-        const subscriber = jest.fn(val => val);
+    const subscriber = jest.fn(val => val);
 
-        const unsubscribe = subscribe(publication, subscriber);
+    const unsubscribe = subscribe(publication, subscriber);
 
-        publish(publication);
+    publish(publication);
 
-        expect(subscriber).toHaveBeenCalledTimes(1);
+    expect(subscriber).toHaveBeenCalledTimes(1);
 
-        unsubscribe();
+    unsubscribe();
 
-        publish(publication);
+    publish(publication);
 
-        expect(subscriber).toHaveBeenCalledTimes(1);
-    });
+    expect(subscriber).toHaveBeenCalledTimes(1);
+  });
 
-    test('Should not error on multiple calls to unsubscribe', () => {
-        expect.hasAssertions();
+  test('Should not error on multiple calls to unsubscribe', () => {
+    expect.hasAssertions();
 
-        const publication = createPublication('test');
+    const publication = createPublication('test');
 
-        const subscriber = jest.fn(val => val);
+    const subscriber = jest.fn(val => val);
 
-        const unsubscribe = subscribe(publication, subscriber);
+    const unsubscribe = subscribe(publication, subscriber);
 
-        publish(publication);
+    publish(publication);
 
-        expect(subscriber).toHaveBeenCalledTimes(1);
+    expect(subscriber).toHaveBeenCalledTimes(1);
 
-        unsubscribe();
-        unsubscribe();
-        unsubscribe();
+    unsubscribe();
+    unsubscribe();
+    unsubscribe();
 
-        publish(publication);
+    publish(publication);
 
-        expect(subscriber).toHaveBeenCalledTimes(1);
-    });
+    expect(subscriber).toHaveBeenCalledTimes(1);
+  });
 
-    test('Should remove subscribers on unsubscribe', () => {
-        expect.hasAssertions();
+  test('Should remove subscribers on unsubscribe', () => {
+    expect.hasAssertions();
 
-        const publication = createPublication('test');
+    const publication = createPublication('test');
 
-        const subscriber1 = jest.fn(val => val);
-        const subscriber2 = jest.fn(val => val);
+    const subscriber1 = jest.fn(val => val);
+    const subscriber2 = jest.fn(val => val);
 
-        const unsubscribe1 = subscribe(publication, subscriber1);
-        const unsubscribe2 = subscribe(publication, subscriber2);
+    const unsubscribe1 = subscribe(publication, subscriber1);
+    const unsubscribe2 = subscribe(publication, subscriber2);
 
-        publish(publication, 'value1')
+    publish(publication, 'value1')
 
-        expect(subscriber1).toHaveBeenCalledWith('value1');
-        expect(subscriber2).toHaveBeenCalledWith('value1');
+    expect(subscriber1).toHaveBeenCalledWith('value1');
+    expect(subscriber2).toHaveBeenCalledWith('value1');
 
-        unsubscribe1();
+    unsubscribe1();
 
-        publish(publication, 'value2')
+    publish(publication, 'value2')
 
-        expect(subscriber2).toHaveBeenCalledWith('value2');
+    expect(subscriber2).toHaveBeenCalledWith('value2');
 
-        unsubscribe2();
+    unsubscribe2();
 
-        publish(publication, 'value3')
+    publish(publication, 'value3')
 
-        expect(subscriber1).toHaveBeenCalledTimes(1);
-        expect(subscriber2).toHaveBeenCalledTimes(2);
-    });
+    expect(subscriber1).toHaveBeenCalledTimes(1);
+    expect(subscriber2).toHaveBeenCalledTimes(2);
+  });
 });

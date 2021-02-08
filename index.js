@@ -1,9 +1,7 @@
-import createPublication from './src/create-publication';
-import publish from './src/publish';
-import subscribe from './src/subscribe';
+'use strict';
 
-export {
-    createPublication,
-    publish,
-    subscribe
-};
+if (process.env.NODE_ENV === 'production') {
+  module.exports = require('./dist/pusu.production.js');
+} else {
+  module.exports = require('./dist/pusu.development.js');
+}
