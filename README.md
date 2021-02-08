@@ -7,7 +7,7 @@ Simple `pub-sub` implementation APIs for Javascript Apps
 
 **Return value**: Object - New publication
 
-Creates & returns a unique new publication object. **Creation of the publication in this way makes sure that each publication is unique in itself and removes the need of maintaining a unique key for each publication.**
+Creates & returns a unique new publication object.
 
 Publication object is a simple javascript object `{ subscribers: [] }` which has an array named `subscribers`. The array `subscribers` actually holds the references to the subscriber functions. Result is, all the subscribers (i.e. functions) of the publication are mapped inside the publication object itself. Whenever a publiser publishes any data for a publication then all the subscribers inside the publication are called with this data.
 
@@ -18,6 +18,10 @@ import { createPublication } from 'pusu';
 
 export default createPublication('Refresh Page Data');
 ```
+
+### Unique publication every time
+
+**Creation of a publication makes sure that each publication is unique in itself and removes the need of maintaining a unique key for each publication.**
 
 Even if multiple publications created with same `name`, then each publication will be treated as a separate publication without any conflicts.
 
