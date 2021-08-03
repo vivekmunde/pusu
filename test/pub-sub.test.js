@@ -1,4 +1,4 @@
-import { createPublication, publish, subscribe } from '../src';
+import { createPublication, publish, subscribe } from '../lib';
 
 describe('pub-sub', () => {
   test('Should not error when publishing a publication without any subscribers', () => {
@@ -26,10 +26,10 @@ describe('pub-sub', () => {
     const unsubscribe1 = subscribe(publication, subscriber1);
     const unsubscribe2 = subscribe(publication, subscriber2);
 
-    publish(publication, testData1, testData2, testData3)
+    publish(publication, { testData1, testData2, testData3 })
 
-    expect(subscriber1).toHaveBeenCalledWith(testData1, testData2, testData3);
-    expect(subscriber2).toHaveBeenCalledWith(testData1, testData2, testData3);
+    expect(subscriber1).toHaveBeenCalledWith({ testData1, testData2, testData3 });
+    expect(subscriber2).toHaveBeenCalledWith({ testData1, testData2, testData3 });
 
     unsubscribe1();
     unsubscribe2();
