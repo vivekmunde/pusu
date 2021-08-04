@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "outDir": "es",
-    "module": "esnext",
+    "outDir": "lib/cjs",
+    "module": "CommonJS",
     "target": "es5",
     "lib": [
       "es6",
