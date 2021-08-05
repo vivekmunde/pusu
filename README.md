@@ -1,7 +1,7 @@
 # pusu
-Simple `pub-sub` implementation APIs for Javascript Apps
+Simple type-safe `pub-sub` implementation APIs for Javascript/TypeScript Apps
 
-## createPublication([name])
+## createPublication&lt;T&gt;([name])
 **Parameters**:
 - `name`: *(Optional)* String - Publication name
 
@@ -11,12 +11,24 @@ Creates & returns a unique new publication object.
 
 Publication object is a simple javascript object `{ subscribers: [] }` which has an array named `subscribers`. The array `subscribers` actually holds the references to the subscriber functions. Result is, all the subscribers (i.e. functions) of the publication are mapped inside the publication object itself. Whenever a publiser publishes any data for a publication then all the subscribers inside the publication are called with this data.
 
+TypeScript
+
 ```
-// refresh-page-data-publication.js
+// load-data-publication.ts
 
 import { createPublication } from 'pusu';
 
-export default createPublication('Refresh Page Data');
+export default createPublication<{ asOfDate: Date }>('Load data');
+```
+
+JavaScript
+
+```
+// load-data-publication.js
+
+import { createPublication } from 'pusu';
+
+export default createPublication('Load data');
 ```
 
 ### Unique publication every time
@@ -27,11 +39,24 @@ Even if multiple publications created with same `name`, then each publication wi
 
 Below code creates two separate unique publications `publication1` & `publication2` even though the publication names are same. Name is just for the sake of naming the publication so that its useful during debugging any issues.
 
+TypeScript
+
 ```
 import { createPublication } from 'pusu';
 
-const publication1 = createPublication('Refresh Page Data');
-const publication2 = createPublication('Refresh Page Data');
+const publication1 = createPublication<{ asOfDate: Date }>('Load data');
+const publication2 = createPublication<{ asOfDate: Date }>('Load data');
+
+console.log(publication1 === publication2); //false
+```
+
+JavaScript
+
+```
+import { createPublication } from 'pusu';
+
+const publication1 = createPublication('Load data');
+const publication2 = createPublication('Load data');
 
 console.log(publication1 === publication2); //false
 ```
@@ -45,14 +70,14 @@ console.log(publication1 === publication2); //false
 
 ```
 import { publish } from 'pusu';
-import refreshPageDataPublication from './publications/refresh-page-data-publication';
+import loadDataPublication from './publications/load-data-publication';
 
   ...
 
   const handleClick = () => {
     const asOfDate = new Date();
     // Publish the data 
-    publish(publication, asOfDate, company._id);
+    publish(publication, { asOfDate });
   }
 
   ...
@@ -82,19 +107,19 @@ import refreshPageDataPublication from './publications/refresh-page-data-publica
 
 ```
 import { subscribe } from 'pusu';
-import refreshPageDataPublication from './publications/refresh-page-data-publication';
+import refreshPageDataPublication from './publications/load-data-publication';
 
   ...
 
   let unsubscribe;
 
-  const refreshData = (asOf, companyId) => {
+  const loadData = ({ asOfDate }) => {
     // load the data from API
   }
 
   // Subscribe to the publication
   const onInit = () => {
-    unsubscribe = subscribe(refreshPageDataPublication, refreshData);
+    unsubscribe = subscribe(loadDataPublication, loadData);
   }
 
   // Unsubscribe from the publication before removal of the component
