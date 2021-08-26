@@ -107,7 +107,7 @@ import loadDataPublication from './publications/load-data-publication';
 
 ```
 import { subscribe } from 'pusu';
-import refreshPageDataPublication from './publications/load-data-publication';
+import loadDataPublication from './publications/load-data-publication';
 
   ...
 
