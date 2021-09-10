@@ -143,7 +143,7 @@ The version 1.1 will allow only one parameter while publishing the data & subscr
 
 The versions 1.0 was allowing more than one parameters while publishing the data.
 
-In the example below, publisher is publishing date and company id as two different parameters.
+In the example below, publisher used to publish date and company id as two different parameters.
 
 ```
 import { publish } from 'pusu';
@@ -175,7 +175,7 @@ import refreshPageDataPublication from './publications/refresh-page-data-publica
   ...
 ```
 
-The subscriber receives two arguments as date and company id.
+The subscriber used to receive two arguments as date and company id.
  
 ```
 import { subscribe } from 'pusu';
@@ -209,7 +209,7 @@ import refreshPageDataPublication from './publications/refresh-page-data-publica
 
 The version 1.1 will allow only one parameter while publishing the data & subscribing to the data.
 
-In the example below, publisher is publishing one JSON object consisting of date and company id.
+In the example below, publisher will not publish only one JSON object consisting of date and company id.
 
 ```
 import { publish } from 'pusu';
@@ -241,7 +241,7 @@ import refreshPageDataPublication from './publications/refresh-page-data-publica
   ...
 ```
 
-The subscriber receives it as the same JSON object consisting of date and company id.
+The subscriber will receive only one argeument, as the same JSON object consisting of date and company id.
 
 ```
 import { subscribe } from 'pusu';
