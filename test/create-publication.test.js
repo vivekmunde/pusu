@@ -1,4 +1,4 @@
-import { createPublication } from '../lib';
+import { createPublication } from '../lib/cjs';
 
 describe('createPublication()', () => {
   test(`Should return new publication object with name as 'anonymous'`, () => {
