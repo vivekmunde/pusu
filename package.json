@@ -2,13 +2,14 @@
   "name": "pusu",
   "version": "1.0.2",
   "description": "Simple Publish-Subscribe implementation APIs for Javascript Apps",
-  "main": "./dist/index.js",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/es/index.js",
+  "types": "./lib/es/index.d.ts",
   "scripts": {
-    "build-development": "webpack --config webpack.development.config.js",
-    "build-production": "webpack --config webpack.production.config.js",
-    "build": "npm run build-development && npm run build-production",
-    "clean": "rimraf ./dist",
-    "test": "jest",
+    "build": "npm run clean && npm run compile-ts",
+    "clean": "rimraf ./lib",
+    "compile-ts": "npm run clean && tsc -p tsconfig-esm.json && tsc -p tsconfig-cjs.json",
+    "test": "npm run compile-ts && jest",
     "prepublish": "npm run clean && npm run build"
   },
   "repository": {
@@ -16,9 +17,8 @@
     "url": "git+https://github.com/vivekmunde/pusu.git"
   },
   "files": [
-    "dist",
-    "src",
-    "index.js"
+    "lib",
+    "src"
   ],
   "keywords": [
     "javascript",
@@ -37,9 +37,7 @@
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "babel-jest": "^24.8.0",
-    "babel-loader": "^8.0.6",
     "jest": "^24.8.0",
-    "webpack": "^4.39.2",
-    "webpack-cli": "^3.3.7"
+    "typescript": "^4.3.5"
   }
 }
