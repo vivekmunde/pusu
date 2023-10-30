@@ -1,13 +1,13 @@
 export type TPublication<T> = {
   name: string,
-  subscribers: ((args: T) => void)[],
+  subscribers: ((args?: T) => void)[],
 }
 
 export type TCreatePublication = <T>(name?: string) => TPublication<T>;
 
-export type TPublish = <T>(publication: TPublication<T>, args: T) => void;
+export type TPublish = <T>(publication: TPublication<T>, args?: T) => void;
 
-export type TSubscribe = <T>(publication: TPublication<T>, subscriber: (args: T) => void) => () => void;
+export type TSubscribe = <T>(publication: TPublication<T>, subscriber: (args?: T) => void) => () => void;
 
 export const createPublication: TCreatePublication = (name) => {
   return {
