@@ -1,12 +1,18 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss';
+import colors from 'tailwindcss/colors';
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    colors: {
+      ...colors,
+      primary: '#ec4899',
+    },
     extend: {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -16,5 +22,6 @@ const config: Config = {
     },
   },
   plugins: [],
-}
-export default config
+};
+
+export default config;
