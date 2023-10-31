@@ -8,7 +8,7 @@ import Paragraph from '../paragraph';
 const Subscribe: React.FC = () => {
   return (
     <Section>
-      <SectionTitle id="publish" level={3}>Subscribe</SectionTitle>
+      <SectionTitle id="subscribe" level={3}>Subscribe</SectionTitle>
       <Section>
         <h5>Type Definition</h5>
         <CodeBlock>
@@ -31,27 +31,17 @@ const Subscribe: React.FC = () => {
           {`import { subscribe } from 'pusu';
 import loadDataPublication from './publications/load-data-publication';
 
-...
-
 let unsubscribe;
 
-const loadData = ({ asOfDate }) => {
-  // load the data from API
-}
-
 // Subscribe to the publication
-const onInit = () => {
-  unsubscribe = subscribe(loadDataPublication, loadData);
-}
+unsubscribe = subscribe(loadDataPublication, ({ asOfDate }) => {
+  // load the data from API
+});
 
 // Unsubscribe from the publication before removal of the component
-const beforeRemoval = () => {
-  if (unsubscribe) {
-    unsubscribe();
-  }
-}
-
-  ...`}
+if (unsubscribe) {
+  unsubscribe();
+}`}
         </CodeBlock>
       </Section>
     </Section>

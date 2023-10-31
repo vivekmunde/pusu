@@ -29,30 +29,14 @@ const Publish: React.FC = () => {
                     {`import { publish } from 'pusu';
 import loadDataPublication from './publications/load-data-publication';
 
-  ...
-
-  const handleClick = () => {
-    const asOfDate = new Date();
-    // Publish the data 
-    publish(loadDataPublication, { asOfDate });
-  }
-
-  ...
-
-  const renderButton = () => {
-    ...
-
-    <button
-      id="headerRefreshAction"
-      onClick={handleClick}
-    >
-      Refresh
-    </button>
-
-    ...
-  }
-
-  ...`}
+<button
+    onClick={() => {
+        // Publish the data 
+        publish(loadDataPublication, { asOfDate: new Date() });
+    }}
+>
+    Refresh
+</button>`}
                 </CodeBlock>
             </Section>
         </Section>

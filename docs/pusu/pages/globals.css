@@ -18,12 +18,6 @@ h5,
 .h4,
 .h5 {
   margin-bottom: theme('spacing.4');
-}
-
-h4,
-.h4,
-h5,
-.h5 {
   font-weight: theme('fontWeight.bold');
 }
 
