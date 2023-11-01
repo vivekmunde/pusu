@@ -1,5 +1,5 @@
 export type TPublication<T> = {
-  name: string,
+  name?: string,
   subscribers: ((args?: T) => void)[],
 }
 
@@ -11,7 +11,7 @@ export type TSubscribe = <T>(publication: TPublication<T>, subscriber: (args?: T
 
 export const createPublication: TCreatePublication = (name) => {
   return {
-    name: name ?? 'anonymous',
+    name,
     subscribers: [],
   };
 }
