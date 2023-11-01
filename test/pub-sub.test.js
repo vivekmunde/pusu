@@ -1,4 +1,4 @@
-import { createPublication, publish, subscribe } from '../lib/cjs';
+import { createPublication, publish, subscribe } from '../lib/es';
 
 describe('pub-sub', () => {
   test('Should not error when publishing a publication without any subscribers', () => {
