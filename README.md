@@ -52,7 +52,7 @@ type TPublish = <T>(publication: TPublication<T>, data?: T) => void;
 
 **Parameters**:
 - `publication`: *(Required)* Object - Publication object created using the api `createPublication()`
-- `data`: *(Optional)* Any - These parameters/arguments are passed as is to the subscribers listening to the publication. Its a way of passing data to the subscribers.
+- `data`: *(Optional)* - This argument is passed to the subscribers listening to the publication. Its a way of passing data to the subscribers.
 
 `publish` method calls all the subscribers subscribed to the `publication` (provided as a first argument). It calls the subscribers with the data.
 
