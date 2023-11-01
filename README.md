@@ -6,7 +6,7 @@ Simple type-safe `pub-sub` implementation APIs for Javascript/TypeScript Apps
 ```
 type TPublication<T> = {
   name?: string,
-  subscribers: ((data?: T) => void)[],
+  subscribers: ((data: T) => void)[],
 }
 
 type TCreatePublication = <T>(name?: string) => TPublication<T>;
@@ -47,7 +47,7 @@ console.log(publication1 === publication2); //false
 ## Publish
 
 ```
-type TPublish = <T>(publication: TPublication<T>, data?: T) => void;
+type TPublish = <T>(publication: TPublication<T>, data: T) => void;
 ```
 
 **Parameters**:
@@ -74,7 +74,7 @@ import loadDataPublication from './publications/load-data-publication';
 ## Subscribe
 
 ```
-type TSubscribe = <T>(publication: TPublication<T>, subscriber: (data?: T) => void) => () => void;
+type TSubscribe = <T>(publication: TPublication<T>, subscriber: (data: T) => void) => () => void;
 ```
 
 **Parameters**:
