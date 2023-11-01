@@ -1,13 +1,13 @@
 export type TPublication<T> = {
   name?: string,
-  subscribers: ((args?: T) => void)[],
+  subscribers: ((data?: T) => void)[],
 }
 
 export type TCreatePublication = <T>(name?: string) => TPublication<T>;
 
-export type TPublish = <T>(publication: TPublication<T>, args?: T) => void;
+export type TPublish = <T>(publication: TPublication<T>, data?: T) => void;
 
-export type TSubscribe = <T>(publication: TPublication<T>, subscriber: (args?: T) => void) => () => void;
+export type TSubscribe = <T>(publication: TPublication<T>, subscriber: (data?: T) => void) => () => void;
 
 export const createPublication: TCreatePublication = (name) => {
   return {
@@ -16,9 +16,9 @@ export const createPublication: TCreatePublication = (name) => {
   };
 }
 
-export const publish: TPublish = (publication, args) => {
+export const publish: TPublish = (publication, data) => {
   for (const subscriber of publication.subscribers) {
-    subscriber(args);
+    subscriber(data);
   }
 }
 
