@@ -1,9 +1,9 @@
-import { createPublication } from '../lib/cjs';
+import { createPublication } from '../lib/es';
 
 describe('createPublication()', () => {
-  test(`Should return new publication object with name as 'anonymous'`, () => {
+  test(`Should return new publication object without name`, () => {
     expect.hasAssertions();
-    expect(createPublication()).toEqual({ name: 'anonymous', subscribers: [] });
+    expect(createPublication()).toEqual({ name: undefined, subscribers: [] });
   });
 
   test('Should return a unique new publication object every time', () => {

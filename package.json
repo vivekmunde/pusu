@@ -1,8 +1,8 @@
 {
   "name": "pusu",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Simple Publish-Subscribe implementation APIs for Javascript Apps",
-  "main": "./lib/cjs/index.js",
+  "main": "./lib/es/index.js",
   "module": "./lib/es/index.js",
   "types": "./lib/es/index.d.ts",
   "scripts": {
@@ -38,6 +38,6 @@
     "@babel/preset-env": "^7.5.5",
     "babel-jest": "^24.8.0",
     "jest": "^24.8.0",
-    "typescript": "^4.3.5"
+    "typescript": "^5.2.2"
   }
 }

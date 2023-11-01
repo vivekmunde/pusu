@@ -1,4 +1,4 @@
-import { createPublication, publish, subscribe } from '../lib/cjs';
+import { createPublication, publish, subscribe } from '../lib/es';
 
 describe('pub-sub', () => {
   test('Should not error when publishing a publication without any subscribers', () => {
@@ -11,7 +11,27 @@ describe('pub-sub', () => {
     expect(true).toBe(true);
   });
 
-  test('Should publish & call the subscribers with args', () => {
+  test('Should publish & call the subscribers without data', () => {
+    expect.hasAssertions();
+
+    const publication = createPublication('test');
+
+    const subscriber1 = jest.fn(val => val);
+    const subscriber2 = jest.fn(val => val);
+
+    const unsubscribe1 = subscribe(publication, subscriber1);
+    const unsubscribe2 = subscribe(publication, subscriber2);
+
+    publish(publication);
+
+    expect(subscriber1).toHaveBeenCalledWith(undefined);
+    expect(subscriber2).toHaveBeenCalledWith(undefined);
+
+    unsubscribe1();
+    unsubscribe2();
+  });
+
+  test('Should publish & call the subscribers with data', () => {
     expect.hasAssertions();
 
     const testData1 = 'test-data1';
@@ -26,7 +46,7 @@ describe('pub-sub', () => {
     const unsubscribe1 = subscribe(publication, subscriber1);
     const unsubscribe2 = subscribe(publication, subscriber2);
 
-    publish(publication, { testData1, testData2, testData3 })
+    publish(publication, { testData1, testData2, testData3 });
 
     expect(subscriber1).toHaveBeenCalledWith({ testData1, testData2, testData3 });
     expect(subscriber2).toHaveBeenCalledWith({ testData1, testData2, testData3 });
