@@ -6,7 +6,7 @@ describe('pub-sub', () => {
 
     const publication = createPublication('test');
 
-    publish(publication);
+    publish(publication, undefined);
 
     expect(true).toBe(true);
   });
@@ -22,7 +22,7 @@ describe('pub-sub', () => {
     const unsubscribe1 = subscribe(publication, subscriber1);
     const unsubscribe2 = subscribe(publication, subscriber2);
 
-    publish(publication);
+    publish(publication, undefined);
 
     expect(subscriber1).toHaveBeenCalledWith(undefined);
     expect(subscriber2).toHaveBeenCalledWith(undefined);
@@ -64,13 +64,13 @@ describe('pub-sub', () => {
 
     const unsubscribe = subscribe(publication, subscriber);
 
-    publish(publication);
+    publish(publication, undefined);
 
     expect(subscriber).toHaveBeenCalledTimes(1);
 
     unsubscribe();
 
-    publish(publication);
+    publish(publication, undefined);
 
     expect(subscriber).toHaveBeenCalledTimes(1);
   });
@@ -84,7 +84,7 @@ describe('pub-sub', () => {
 
     const unsubscribe = subscribe(publication, subscriber);
 
-    publish(publication);
+    publish(publication, undefined);
 
     expect(subscriber).toHaveBeenCalledTimes(1);
 
@@ -92,7 +92,7 @@ describe('pub-sub', () => {
     unsubscribe();
     unsubscribe();
 
-    publish(publication);
+    publish(publication, undefined);
 
     expect(subscriber).toHaveBeenCalledTimes(1);
   });
