@@ -1,6 +1,6 @@
 {
   "name": "pusu",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Simple Publish-Subscribe implementation APIs for Javascript Apps",
   "main": "./lib/cjs/index.js",
   "module": "./lib/es/index.js",
