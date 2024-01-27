@@ -1,37 +1,120 @@
+export type TPublish<T> = (data: T) => void;
+
+export type TSubscriber<T> = (data: T) => void;
+
+export type TUnsubscribe<T> = (subscriber: TSubscriber<T>) => void;
+
+export type TSubscribe<T> = (subscriber: TSubscriber<T>) => () => void;
+
 export type TPublication<T> = {
-  name?: string,
-  subscribers: ((data: T) => void)[],
-}
+  publish: TPublish<T>;
+  subscribe: TSubscribe<T>;
+  unsubscribe: TUnsubscribe<T>;
+};
 
-export type TCreatePublication = <T>(name?: string) => TPublication<T>;
+export type TCreateOptions = {
+  name?: string;
+  enableLogging?: string;
+};
 
-export type TPublish = <T>(publication: TPublication<T>, data: T) => void;
+export type TLogAction =
+  | "create"
+  | "publish"
+  | "subscribe"
+  | "unsubscribe"
+  | "notify";
 
-export type TSubscribe = <T>(publication: TPublication<T>, subscriber: (data: T) => void) => () => void;
+export type TLog = <TData, TMetaData>(
+  publication: string,
+  action: TLogAction,
+  data: TData,
+  meta?: TMetaData
+) => void;
 
-export const createPublication: TCreatePublication = (name) => {
-  return {
-    name,
-    subscribers: [],
-  };
-}
+const log = <TData, TMetaData>(
+  publication: string,
+  action: TLogAction,
+  data?: TData,
+  meta?: TMetaData
+) => {
+  const info: {
+    publication: string;
+    action: TLogAction;
+    data?: TData;
+    meta?: TMetaData;
+  } = { publication, action };
 
-export const publish: TPublish = (publication, data) => {
-  for (const subscriber of publication.subscribers) {
-    subscriber(data);
+  if (data) {
+    info.data = data;
   }
-}
 
-export const subscribe: TSubscribe = (publication, subscriber) => {
-  const { subscribers } = publication;
+  if (meta) {
+    info.meta = meta;
+  }
 
-  subscribers.push(subscriber);
+  console.log("pusu", info);
+};
 
-  return function unsubscribe() {
-    const index = subscribers.indexOf(subscriber);
+const create = <T>(options?: TCreateOptions): TPublication<T> => {
+  const _loggingEnabled = options?.enableLogging;
 
-    if (index > -1) {
-      subscribers.splice(index, 1);
+  const _name: string = options?.name ?? "Unknown";
+
+  const _subscribers: TSubscriber<T>[] = [];
+
+  const _log = <TData, TMetaData>(
+    action: "create" | "publish" | "subscribe" | "unsubscribe" | "notify",
+    data: TData,
+    meta?: TMetaData
+  ) => {
+    if (_loggingEnabled) {
+      log(_name, action, data, meta);
     }
   };
-}
+
+  const publish: TPublish<T> = (data) => {
+    _log<T, undefined>("publish", data, undefined);
+
+    for (const subscriber of _subscribers) {
+      _log<T, { subscriber: string }>("notify", data, {
+        subscriber: subscriber.name,
+      });
+
+      subscriber(data);
+    }
+  };
+
+  const unsubscribe: TUnsubscribe<T> = (subscriber) => {
+    _log<undefined, { subscriber: string }>("unsubscribe", undefined, {
+      subscriber: subscriber.name,
+    });
+
+    const index = _subscribers.indexOf(subscriber);
+
+    if (index > -1) {
+      _subscribers.splice(index, 1);
+    }
+  };
+
+  const subscribe: TSubscribe<T> = (subscriber) => {
+    _log<undefined, { subscriber: string }>("subscribe", undefined, {
+      subscriber: subscriber.name,
+    });
+
+    _subscribers.push(subscriber);
+
+    return () => unsubscribe(subscriber);
+  };
+
+  _log("create", undefined);
+
+  const publication: TPublication<T> = {
+    publish,
+    subscribe,
+    unsubscribe,
+  };
+
+  return publication;
+};
+
+export default create;
