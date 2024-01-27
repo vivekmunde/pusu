@@ -1,12 +1,12 @@
-import create from "../lib/es";
+import createPublication from "../lib/es";
 
 describe("pusu", () => {
   test("Should return a unique new publication object every time", () => {
     expect.hasAssertions();
 
-    const publication1 = create({ name: "name" });
-    const publication2 = create({ name: "name" });
-    const publication3 = create({ name: "name" });
+    const publication1 = createPublication({ name: "name" });
+    const publication2 = createPublication({ name: "name" });
+    const publication3 = createPublication({ name: "name" });
 
     expect(publication1 === publication2).toBe(false);
     expect(publication1 === publication3).toBe(false);
@@ -16,7 +16,7 @@ describe("pusu", () => {
   test("Should not error when publishing a publication without any subscribers", () => {
     expect.hasAssertions();
 
-    const publication = create({ name: "test" });
+    const publication = createPublication({ name: "test" });
 
     publication.publish(undefined);
 
@@ -30,7 +30,7 @@ describe("pusu", () => {
     const testData2 = { data: "test-data2" };
     const testData3 = ["test-data3"];
 
-    const publication = create({ name: "test" });
+    const publication = createPublication({ name: "test" });
 
     const subscriber1 = jest.fn((val) => val);
     const subscriber2 = jest.fn((val) => val);
@@ -58,7 +58,7 @@ describe("pusu", () => {
   test("Should unsubscribe using subscribe().unsubscribe", () => {
     expect.hasAssertions();
 
-    const publication = create({ name: "test" });
+    const publication = createPublication({ name: "test" });
 
     const subscriber1 = jest.fn((val) => val);
     const subscriber2 = jest.fn((val) => val);
@@ -88,7 +88,7 @@ describe("pusu", () => {
   test("Should unsubscribe using publication.unsubscribe", () => {
     expect.hasAssertions();
 
-    const publication = create({ name: "test" });
+    const publication = createPublication({ name: "test" });
 
     const subscriber = jest.fn((val) => val);
 
@@ -108,7 +108,7 @@ describe("pusu", () => {
   test("Should not error on multiple calls to unsubscribe", () => {
     expect.hasAssertions();
 
-    const publication = create({ name: "test" });
+    const publication = createPublication({ name: "test" });
 
     const subscriber = jest.fn((val) => val);
 
@@ -134,7 +134,7 @@ describe("pusu", () => {
 
     const testData = "test-data";
 
-    const publication = create();
+    const publication = createPublication();
 
     expect(logSpy).not.toHaveBeenCalled();
 
@@ -160,7 +160,7 @@ describe("pusu", () => {
 
     const testData = "test-data";
 
-    const publication = create({ enableLogging: false });
+    const publication = createPublication({ enableLogging: false });
 
     expect(logSpy).not.toHaveBeenCalled();
 
@@ -188,7 +188,10 @@ describe("pusu", () => {
     const testData2 = { data: "test-data2" };
     const testData3 = ["test-data3"];
 
-    const publication = create({ name: "test", enableLogging: true });
+    const publication = createPublication({
+      name: "test",
+      enableLogging: true,
+    });
 
     expect(logSpy).toHaveBeenCalledWith("pusu", {
       publication: "test",
@@ -249,7 +252,7 @@ describe("pusu", () => {
 
     const testData = "test-data";
 
-    const publication = create({ enableLogging: true });
+    const publication = createPublication({ enableLogging: true });
 
     expect(logSpy).toHaveBeenCalledWith("pusu", {
       publication: "Unknown",

@@ -1,19 +1,64 @@
-export type TPublish<T> = (data: T) => void;
+/**
+ * Publishes the data to all subscribers.
+ * @param {T} data - Data to be published. All subscribers receive this data.
+ */
+export type TPublish<T> = (
+  /** Data to be published. All subscribers receive this data. */
+  data: T
+) => void;
 
-export type TSubscriber<T> = (data: T) => void;
+/**
+ * A subscriber function to be called each time the data is published.
+ * @param {T} data - The data sent by the publisher.
+ */
+export type TSubscriber<T> = (
+  /** The data sent by the publisher. */
+  data: T
+) => void;
 
-export type TUnsubscribe<T> = (subscriber: TSubscriber<T>) => void;
+/**
+ * Unsibscribes a subscriber from the publication.
+ * @param {TSubscriber} subscriber - The subscriber function to be unsubscribed.
+ */
+export type TUnsubscribe<T> = (
+  /** The subscriber function to be unsubscribed. */
+  subscriber: TSubscriber<T>
+) => void;
 
-export type TSubscribe<T> = (subscriber: TSubscriber<T>) => () => void;
+/**
+ * Subscribes to the publication.
+ * @param {TSubscriber} subscriber - A subscriber function to be called each time the data is published.
+ */
+export type TSubscribe<T> = (
+  /** A subscriber function to be called each time the data is published. */
+  subscriber: TSubscriber<T>
+) => () => void;
 
+/**
+ * Publication.
+ * @property {TPublish} publish - Publishes the data to all subscribers.
+ * @property {TSubscribe} subscribe - Subscribes to the publication.
+ * @property {TUnsubscribe} unsubscribe - Unsibscribes a subscriber from the publication.
+ */
 export type TPublication<T> = {
+  /** Publishes the data to all subscribers. */
   publish: TPublish<T>;
+
+  /** Subscribes to the publication. */
   subscribe: TSubscribe<T>;
+
+  /** Unsibscribes a subscriber from the publication. */
   unsubscribe: TUnsubscribe<T>;
 };
 
+/**
+ * Configuration options to be provided to the publication being created.
+ */
 export type TCreateOptions = {
+  /** Used in logging. Default: "Unknown". */
   name?: string;
+
+  /** Enable/disable logging. If enabled then each action "create" | "publish" | "subscribe" | "unsubscribe" | "notify" gets logged on console with relevent data. */
   enableLogging?: string;
 };
 
@@ -24,17 +69,21 @@ export type TLogAction =
   | "unsubscribe"
   | "notify";
 
-export type TLog = <TData, TMetaData>(
-  publication: string,
-  action: TLogAction,
-  data: TData,
-  meta?: TMetaData
-) => void;
-
+/**
+ * Logs the action and its relative information.
+ *
+ * @param {string} publication - Name of the publication.
+ * @param {TLogAction} - Action: | "create" | "publish" | "subscribe" | "unsubscribe" | "notify"
+ * @param {TData} - Data sent to subscribers.
+ * @param {TMetaData} - Can be any metadata. E.g. in case of subscribe the name of the subscriber function. */
 const log = <TData, TMetaData>(
+  /** Name of the publication. */
   publication: string,
+  /** Action: | "create" | "publish" | "subscribe" | "unsubscribe" | "notify" */
   action: TLogAction,
+  /** Data sent to subscribers. */
   data?: TData,
+  /** Can be any metadata. E.g. in case of subscribe the name of the subscriber function. */
   meta?: TMetaData
 ) => {
   const info: {
@@ -55,7 +104,16 @@ const log = <TData, TMetaData>(
   console.log("pusu", info);
 };
 
-const create = <T>(options?: TCreateOptions): TPublication<T> => {
+/**
+ * Creates a new publication.
+ *
+ * @param {TCreateOptions} options - Configuration options to be provided to the publication being created.
+ * @returns {TPublication} Publication object containing the pub-sub functions.
+ */
+const createPublication = <T>(
+  /** Configuration options to be provided to the publication being created. */
+  options?: TCreateOptions
+): TPublication<T> => {
   const _loggingEnabled = options?.enableLogging;
 
   const _name: string = options?.name ?? "Unknown";
@@ -63,7 +121,7 @@ const create = <T>(options?: TCreateOptions): TPublication<T> => {
   const _subscribers: TSubscriber<T>[] = [];
 
   const _log = <TData, TMetaData>(
-    action: "create" | "publish" | "subscribe" | "unsubscribe" | "notify",
+    action: TLogAction,
     data: TData,
     meta?: TMetaData
   ) => {
@@ -117,4 +175,4 @@ const create = <T>(options?: TCreateOptions): TPublication<T> => {
   return publication;
 };
 
-export default create;
+export default createPublication;
