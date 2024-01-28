@@ -1,28 +1,56 @@
+/**
+ * A subscriber function to be called each time the data is published.
+ *
+ * @param {T} data - The data sent by the publisher.
+ */
+export type TSubscriber<T> = (data: T) => void;
+
+/**
+ * Publication object.
+ * @property {string} name - Name of the publication.
+ */
 export type TPublication<T> = {
-  name: string,
-  subscribers: ((args: T) => void)[],
-}
+  name?: string;
+  subscribers: TSubscriber<T>[];
+};
 
-export type TCreatePublication = <T>(name?: string) => TPublication<T>;
-
-export type TPublish = <T>(publication: TPublication<T>, args: T) => void;
-
-export type TSubscribe = <T>(publication: TPublication<T>, subscriber: (args: T) => void) => () => void;
-
-export const createPublication: TCreatePublication = (name) => {
+/**
+ * Creates a new publication.
+ *
+ * @param {string} name - Name of the publication. Helpful in debugging and logging.
+ * @returns {TPublication} Publication.
+ */
+export const createPublication = <T>(name?: string): TPublication<T> => {
   return {
-    name: name ?? 'anonymous',
+    name: name ?? "anonymous",
     subscribers: [],
   };
-}
+};
 
-export const publish: TPublish = (publication, args) => {
+/**
+ * Publishes the data to all subscribers.
+ *
+ * @param {TPublication} publication - Publication object.
+ * @param {T} data - Data to publish and to be sent to all subscribers.
+ */
+export const publish = <T>(publication: TPublication<T>, data: T): void => {
   for (const subscriber of publication.subscribers) {
-    subscriber(args);
+    subscriber(data);
   }
-}
+};
 
-export const subscribe: TSubscribe = (publication, subscriber) => {
+/**
+ * Subscribes to the publication.
+ *
+ * @param {TPublication} publication - Publication object.
+ * @param {TSubscriber} subscriber - A subscriber function to be called each time the data is published.
+ *
+ * @returns {function} Ubsubscribes the subscriber from the publication.
+ */
+export const subscribe = <T>(
+  publication: TPublication<T>,
+  subscriber: TSubscriber<T>
+): (() => void) => {
   const { subscribers } = publication;
 
   subscribers.push(subscriber);
@@ -34,4 +62,4 @@ export const subscribe: TSubscribe = (publication, subscriber) => {
       subscribers.splice(index, 1);
     }
   };
-}
+};
