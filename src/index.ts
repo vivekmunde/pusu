@@ -19,7 +19,7 @@ export type TSubscriber<T> = (data: T) => void;
 export type TUnsubscribe<T> = (subscriber: TSubscriber<T>) => void;
 
 /**
- * Subscribes to the publication.
+ * Subscribes a subscriber function to the publication.
  *
  * @param {TSubscriber} subscriber - A subscriber function to be called each time the data is published.
  * @returns {function} A function to ubsubscribe the subscriber function from the publication.
@@ -45,7 +45,7 @@ export type TPublication<T> = {
  * @property {string} name - Used in logging. Default: "Unknown".
  * @property {boolean} enableLogging - Enable/disable logging. If enabled then each action "create" | "publish" | "subscribe" | "unsubscribe" | "notify" gets logged on console with relevent data.
  */
-export type TCreateOptions = {
+export type TCreateConfiguration = {
   name?: string;
   enableLogging?: boolean;
 };
@@ -109,13 +109,15 @@ const log = <TData, TMetaData>(
 /**
  * Creates a new publication.
  *
- * @param {TCreateOptions} options - Configuration options to be provided to the publication.
+ * @param {TCreateConfiguration} config - Configuration options to be provided to the publication.
  * @returns {TPublication} Publication object containing the pub-sub functions.
  */
-const createPublication = <T>(options?: TCreateOptions): TPublication<T> => {
-  const _loggingEnabled = options?.enableLogging;
+const createPublication = <T>(
+  config?: TCreateConfiguration
+): TPublication<T> => {
+  const _loggingEnabled = config?.enableLogging;
 
-  const _name: string = options?.name ?? "Unknown";
+  const _name: string = config?.name ?? "Unknown";
 
   const _subscribers: TSubscriber<T>[] = [];
 

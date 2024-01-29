@@ -1,30 +1,65 @@
 # pusu
-Simple type-safe `pub-sub` implementation APIs for Javascript/TypeScript Apps
+
+Simple type-safe `pub-sub` implementation APIs for Javascript/TypeScript Apps.
+
+## Publication object
+
+```
+type TPublication<T> = {
+  publish: TPublish<T>;
+  subscribe: TSubscribe<T>;
+  unsubscribe: TUnsubscribe<T>;
+}
+
+type TPublish<T> = (data: T) => void;
+
+type TSubscribe<T> = (subscriber: TSubscriber<T>) => () => void;
+
+type TUnsubscribe<T> = (subscriber: TSubscriber<T>) => void;
+```
+
+**Properties**
+
+- publish: Publishes the data to all subscribers.
+- subscribe: Subscribes a subscriber function to the publication.
+- unsubscribe: Unsibscribes a subscriber function from the publication.
 
 ## Create Publication
 
 ```
-type TPublication<T> = {
-  name?: string,
-  subscribers: ((data: T) => void)[],
-}
-
-type TCreatePublication = <T>(name?: string) => TPublication<T>;
+declare const createPublication: <T>(options?: TCreateOptions) => TPublication<T>;
 ```
 
-**Parameters**:
-- `name`: *(Optional)* String - Publication name. Useful for logging or debugging.
+**Parameters**
 
-**Return value**: Object - New publication.
+- `config`: _(Optional)_ Configuration options.
+
+**Return value**: New publication.
 
 Creates & returns a unique new publication object.
 
-Publication object is a simple javascript object `{ subscribers: [] }` which has an array named `subscribers`. The array `subscribers` actually holds the references to the subscriber functions. Result is, all the subscribers (i.e. functions) of the publication are mapped inside the publication object itself. Whenever a publiser publishes any data for a publication then all the subscribers inside the publication are called with this data.
+#### Configuration options
+
+```
+type TCreateConfiguration = {
+  name?: string;
+  enableLogging?: string;
+};
+```
+
+**Properties**
+
+- name: _(Optional)_ Name of the publication used in logging. Default: "Unknown".
+- enableLogging: _(Optional)_ Enable/disable logging. If enabled then each action "create" | "publish" | "subscribe" | "unsubscribe" | "notify" gets logged on console with relevent data.
+
+**Example**
 
 ```
 import { createPublication } from 'pusu';
 
-export default createPublication<{ asOfDate: Date }>('load-data');
+const loadDataPublication = createPublication<{ asOfDate: Date }>({ name: 'load-data' });
+
+export default loadDataPublication;
 ```
 
 ### Unique publication every time
@@ -35,11 +70,13 @@ Even if multiple publications created with same `name`, then each publication wi
 
 Below code creates two separate unique publications `publication1` & `publication2` even though the publication names are same. Name is just for the sake of naming the publication so that its useful during debugging any issues.
 
+**Example**
+
 ```
 import { createPublication } from 'pusu';
 
-const publication1 = createPublication<{ asOfDate: Date }>('load-data');
-const publication2 = createPublication<{ asOfDate: Date }>('load-data');
+const publication1 = createPublication<{ asOfDate: Date }>({ name: 'load-data' });
+const publication2 = createPublication<{ asOfDate: Date }>({ name: 'load-data' });
 
 console.log(publication1 === publication2); //false
 ```
@@ -47,14 +84,16 @@ console.log(publication1 === publication2); //false
 ## Publish
 
 ```
-type TPublish = <T>(publication: TPublication<T>, data: T) => void;
+type TPublish<T> = (data: T) => void;
 ```
 
-**Parameters**:
-- `publication`: *(Required)* Object - Publication object created using the api `createPublication()`
-- `data`: *(Optional)* - This argument is passed to the subscribers listening to the publication. Its a way of passing data to the subscribers.
+**Parameters**
 
-`publish` method calls all the subscribers subscribed to the `publication` (provided as a first argument). It calls the subscribers with the data.
+- `data`: _(Required)_ This argument is passed to the subscribers listening to the publication. Its a way of passing data to the subscribers.
+
+`publish` method calls all the subscriber functions subscribed to the publication and calls them with the data.
+
+**Example**
 
 ```
 import { publish } from 'pusu';
@@ -63,8 +102,8 @@ import loadDataPublication from './publications/load-data-publication';
 <button
   id="headerRefreshAction"
   onClick={() => {
-    // Publish the data 
-    publish(loadDataPublication, { asOfDate: new Date() });
+    // Publish the data
+    loadDataPublication.publish({ asOfDate: new Date() });
   }}
 >
   Refresh
@@ -74,14 +113,16 @@ import loadDataPublication from './publications/load-data-publication';
 ## Subscribe
 
 ```
-type TSubscribe = <T>(publication: TPublication<T>, subscriber: (data: T) => void) => () => void;
+type TSubscribe<T> = (subscriber: TSubscriber<T>) => () => void;
 ```
 
-**Parameters**:
-- `publication`: *(Required)* Object - Publication object created using the api `createPublication`
-- `subscriber`: *(Required)* Function - A subscriber function which will be called by the publisher. This function will receive the data published by the publisher.
+**Parameters**
 
-**Return value**: Function - A function to unsubscribe, when called then the `subscriber` is unsubscribed and no longer called by the publisher.
+- `subscriber`: _(Required)_ A subscriber function which will be called by the publisher. This function will receive the data published by the publisher.
+
+**Return value**: A function to unsubscribe the subscribed subsribed function, when called then the subscriber is unsubscribed and no longer called by the publisher.
+
+**Example**
 
 ```
 import { subscribe } from 'pusu';
@@ -90,105 +131,67 @@ import loadDataPublication from './publications/load-data-publication';
 let unsubscribe;
 
 // Subscribe to the publication
-unsubscribe = subscribe(loadDataPublication, ({ asOfDate }) => {
+unsubscribe = loadDataPublication.subscribe(({ asOfDate }) => {
   // load the data from API
 });
 
 // Unsubscribe from the publication before removal of the component
-if (unsubscribe) {
-  unsubscribe();
-}
+unsubscribe();
 ```
 
-## Migrating from 1.0 to 1.1
+## Logging
 
-### Breaking change
+If logging is enabled while creating the pubcalition then each action gets logged.
 
-The version 1.1 will allow only one parameter while publishing the data & subscribing to the data.
-
-
-### 1.0
-
-The versions 1.0 was allowing more than one parameters while publishing the data.
-
-In the example below, publisher used to publish date and company id as two different parameters.
+#### Log Information
 
 ```
-import { publish } from 'pusu';
-import refreshPageDataPublication from './publications/refresh-page-data-publication';
-
-<button
-  id="headerRefreshAction"
-  onClick={() => {
-    // Publish the data 
-    publish(publication, new Date(), '123');
-}}
->
-  Refresh
-</button>
+type TLog<T> = {
+  publication: string;
+  action: TLogAction;
+  data?: T;
+  meta?: any;
+};
 ```
 
-The subscriber used to receive two arguments as date and company id.
- 
+- publication: Name of the publication. Default = "Unknown".
+- action: "create" | "publish" | "subscribe" | "unsubscribe" | "notify".
+- data: Data published and sent to subscribers.
+- meta: Can be any metadata. E.g. when a subscriber is notified then the sibscriber function's name is added in the metadata.
+
+#### Actions
+
+- create: When publication is created.
+- publish: When publciation is published with data.
+- subscribe: When a subscriber function is subscribed.
+- unsubscribe: When a subscriber function is unsubscribed.
+- notify: When a subscriber function is called with the data.
+
+**Example**
+
 ```
-import { subscribe } from 'pusu';
-import refreshPageDataPublication from './publications/refresh-page-data-publication';
-
-let unsubscribe;
-
-// Subscribe to the publication
-unsubscribe = subscribe(refreshPageDataPublication, (asOfDate, companyId) => {
-  // load the data from API
+createPublication<{ asOfDate: Date }>({
+  name: 'load-data',
+  enableLogging: process.env.NODE_ENV === 'development',
 });
-
-// Unsubscribe from the publication before removal of the component
-if (unsubscribe) {
-  unsubscribe();
-}
 ```
 
-### 1.1
-
-The version 1.1 will allow only one parameter while publishing the data & subscribing to the data.
-
-In the example below, publisher will not publish only one JSON object consisting of date and company id.
+**Log**
 
 ```
-import { publish } from 'pusu';
-import refreshPageDataPublication from './publications/refresh-page-data-publication';
-
-<button
-  id="headerRefreshAction"
-  onClick={() => {
-    // Publish the data 
-    publish(publication, { asOfDate: new Date(), companyId: '123 });
-  }}
->
-  Refresh
-</button>
+'pusu', { publication: 'load-data', action: 'create' }
 ```
 
-The subscriber will receive only one argeument, as the same JSON object consisting of date and company id.
+```
+'pusu', { publication: 'load-data', action: 'subscribe', meta: { subscriber: '[functionName]' } }
+```
 
 ```
-import { subscribe } from 'pusu';
-import refreshPageDataPublication from './publications/refresh-page-data-publication';
+'pusu', { publication: 'load-data', action: 'publish', data: { asOfDate: 1706513208749 } }
+```
 
-let unsubscribe;
-
-// Subscribe to the publication
-const onInit = () => {
-  unsubscribe = subscribe(refreshPageDataPublication, ({ asOfDate, companyId }) => {
-    // load the data from API
-  });
-}
-
-// Unsubscribe from the publication before removal of the component
-const beforeRemoval = () => {
-  if (unsubscribe) {
-    unsubscribe();
-  }
-}
+```
+'pusu', { publication: 'load-data', action: 'notify', data: { asOfDate: 1706513208749 }, meta: { subscriber: '[functionName]' } }
 ```
 
 ## License
