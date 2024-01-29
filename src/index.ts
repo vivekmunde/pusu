@@ -53,13 +53,13 @@ export type TPublication<T> = {
 
 /**
  * Configuration options to be provided to the publication being created.
+ *
+ * @property {string} name - Used in logging. Default: "Unknown".
+ * @property {boolean} enableLogging - Enable/disable logging. If enabled then each action "create" | "publish" | "subscribe" | "unsubscribe" | "notify" gets logged on console with relevent data.
  */
 export type TCreateOptions = {
-  /** Used in logging. Default: "Unknown". */
   name?: string;
-
-  /** Enable/disable logging. If enabled then each action "create" | "publish" | "subscribe" | "unsubscribe" | "notify" gets logged on console with relevent data. */
-  enableLogging?: string;
+  enableLogging?: boolean;
 };
 
 export type TLogAction =
