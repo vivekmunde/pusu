@@ -27,7 +27,19 @@ export type TPublication<T> = {
   subscribers: TSubscriber<T>[];
 };
 
-type TLogAction = "create" | "publish" | "subscribe" | "unsubscribe" | "notify";
+export type TLogAction =
+  | "create"
+  | "publish"
+  | "subscribe"
+  | "unsubscribe"
+  | "notify";
+
+export type TLog<T> = {
+  publication: string;
+  action: TLogAction;
+  data?: T;
+  meta?: any;
+};
 
 /**
  * Logs the action and its relative information.

@@ -127,12 +127,12 @@ If logging is enabled while creating the pubcalition then each action gets logge
 #### Log Information
 
 ```
-{
+type TLog<T> = {
   publication: string;
   action: TLogAction;
-  data?: TData;
-  meta?: TMetaData;
-}
+  data?: T;
+  meta?: any;
+};
 ```
 
 - publication: Name of the publication. Default = "Unknown".
