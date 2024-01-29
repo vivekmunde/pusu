@@ -7,6 +7,7 @@ export type TSubscriber<T> = (data: T) => void;
 
 /**
  * Publication object.
+ *
  * @property {string} name - Name of the publication.
  */
 export type TPublication<T> = {
@@ -45,7 +46,7 @@ export const publish = <T>(publication: TPublication<T>, data: T): void => {
  * @param {TPublication} publication - Publication object.
  * @param {TSubscriber} subscriber - A subscriber function to be called each time the data is published.
  *
- * @returns {function} Ubsubscribes the subscriber from the publication.
+ * @returns {function} A function to unsubscribe the subscriber from the publication.
  */
 export const subscribe = <T>(
   publication: TPublication<T>,
