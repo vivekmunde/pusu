@@ -1,6 +1,6 @@
 {
   "name": "pusu",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Simple Publish-Subscribe implementation APIs for Javascript Apps",
   "main": "./lib/cjs/index.js",
   "module": "./lib/es/index.js",
@@ -33,11 +33,11 @@
   },
   "homepage": "https://github.com/vivekmunde/pusu#readme",
   "devDependencies": {
-    "@babel/cli": "^7.12.13",
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "babel-jest": "^24.8.0",
-    "jest": "^24.8.0",
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.2",
+    "@babel/preset-env": "^7.23.2",
+    "babel-jest": "^25.5.1",
+    "jest": "^25.5.4",
     "typescript": "^5.2.2"
   }
 }
