@@ -7,12 +7,12 @@ export type TSubscriber<T> = (data: T) => void;
 
 /**
  * Configuration options to be provided to the publication being created.
+ *
+ * @property {string} name - Used in logging. Default: "Unknown".
+ * @property {boolean} enableLogging - Enable/disable console logging. Useful in development and/or test environments. If enabled then each action "create" | "publish" | "subscribe" | "unsubscribe" | "notify" gets logged on console with relevent data.
  */
 export type TCreateConfiguration = {
-  /** Used in logging. Default: "Unknown". */
   name?: string;
-
-  /** Enable/disable console logging. Useful in development and/or test environments. If enabled then each action "create" | "publish" | "subscribe" | "unsubscribe" | "notify" gets logged on console with relevent data. */
   enableLogging?: boolean;
 };
 
@@ -27,13 +27,29 @@ export type TPublication<T> = {
   subscribers: TSubscriber<T>[];
 };
 
+/**
+ * Action to log.
+ */
 export type TLogAction =
+  /** When publication is created. */
   | "create"
+  /** When publciation is published with data. */
   | "publish"
+  /** When a subscriber function is subscribed. */
   | "subscribe"
+  /** When a subscriber function is unsubscribed. */
   | "unsubscribe"
+  /** When a subscriber function is called with the data. */
   | "notify";
 
+/**
+ * Information to log.
+ *
+ * @property {string} publication - Name of the publication. Default: 'Unknown'
+ * @property {TLogAction} action - Action.
+ * @property {T} data - Data published and sent to the subscribers.
+ * @property {any} - Any metadata. E.g. when a subscriber is notified then the sibscriber function's name is added in the metadata.
+ */
 export type TLog<T> = {
   publication: string;
   action: TLogAction;
@@ -55,12 +71,7 @@ const log = <TData, TMetaData>(
   meta?: TMetaData
 ) => {
   if (config?.enableLogging) {
-    const info: {
-      publication: string;
-      action: TLogAction;
-      data?: TData;
-      meta?: TMetaData;
-    } = { publication: config.name ?? "Unknown", action };
+    const info: TLog<TData> = { publication: config.name ?? "Unknown", action };
 
     if (data) {
       info.data = data;
